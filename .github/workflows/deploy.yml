@@ -1,0 +1,56 @@
+name: Deploy Code to VM
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Create SSH directory and add host key
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+          chmod 700 ~/.ssh
+          chmod 644 ~/.ssh/known_hosts
+
+      # Step 3: Zip the code
+      - name: Zip code
+        run: zip -r project.zip ./*
+
+      # Step 4: Copy the zip file to VM
+      - name: Copy zip to VM
+        env:
+          VM_USER: ${{ secrets.VM_USER }}
+          VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+          VM_HOST: ${{ secrets.VM_HOST }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+          sshpass -p "${VM_PASSWORD}" scp project.zip ${VM_USER}@${VM_HOST}:/home/vandhana/deployment/
+
+      # Step 5: SSH into VM, unzip the file, and run commands
+      - name: Run commands on VM
+        env:
+          VM_USER: ${{ secrets.VM_USER }}
+          VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+          VM_HOST: ${{ secrets.VM_HOST }}
+        run: |
+          sshpass -p "${VM_PASSWORD}" ssh ${VM_USER}@${VM_HOST} << 'EOF'
+          cd /home/vandhana/deployment
+          unzip -o project.zip
+          ls 
+          echo "unzipped file"
+          sudo docker stop $(sudo docker ps -q)
+          sudo docker compose up --build -d
+          EOF
+
