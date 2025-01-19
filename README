@@ -1,7 +1,11 @@
-RUN the backend
+# RUN the backend
 npm install
 npm start
-RUN the frontend
+
+# RUN the frontend
 npm install
 npm run dev
-RUN the admin page
+
+# RUN the admin page
+npm install
+npm run dev
