@@ -28,4 +28,4 @@ app.get("/", (req, res) => {
   res.send("API Working")
 });
 
-app.listen(port, () => console.log(`the server is running successfully on http://localhost:${port}`))
+app.listen(port, () => console.log(`Good now the server is running successfully on http://localhost:${port}`))
