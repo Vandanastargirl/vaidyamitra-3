@@ -1,6 +1,6 @@
 RUN the backend
 npm install
-npm run dev
+npm start
 RUN the frontend
 npm install
 npm run dev
