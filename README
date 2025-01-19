@@ -1,0 +1,7 @@
+RUN the backend
+npm install
+npm run start
+RUN the frontend
+npm install
+npm run dev
+RUN the admin page
