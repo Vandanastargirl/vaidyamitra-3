@@ -17,6 +17,8 @@ connectCloudinary()
 app.use(express.json())
 app.use(cors())
 
+
+
 // api endpoints
 app.use("/api/user", userRouter)
 app.use("/api/admin", adminRouter)
@@ -26,4 +28,4 @@ app.get("/", (req, res) => {
   res.send("API Working")
 });
 
-app.listen(port, () => console.log(`Server started on PORT:${port}`))
+app.listen(port, () => console.log(`Server started on http://localhost:${PORT}`))
