@@ -33,3 +33,6 @@ services:
     depends_on:
       - backend
     restart: always
+
+volumes:
+  /app/data
